@@ -1,0 +1,37 @@
+import matplotlib.pyplot as plt
+matrix = []
+for z in range(3000):
+    z_coord = -4.503 + (z * 0.003003)
+    row = []
+    for x in range(3000):
+        x_coord = -4.503 + (x * 0.003003)
+        delta_v = 0.003003
+        delta_s = delta_v ** 2
+        x2 = float(x_coord) ** 2
+        z2 = float(z_coord) ** 2
+        r = (x2 + z2) ** 0.5
+        cos_theta = z_coord / r
+        a0 = 0.529
+        a07 = a0 ** 7
+        pi = 3.1415926535
+        pi6 = 6 * pi
+        rda0 = r / a0
+        e = 2.718281828459045
+        pp1 = 1 / (81 * pi6 * a07)
+        pp2 = r ** 4
+        pp3 = e ** ((-2 * r) / (3 * a0))
+        pp4 = (3 * cos_theta ** 2 - 1) ** 2
+        f = pp1 * pp2 * pp3 * pp4
+        P = f * delta_s
+        row.append(P)
+    matrix.append(row)
+P_max = max(max(row) for row in matrix)
+matrix_norm = []
+for row in matrix:
+    row_norm = []
+    for value in row:
+        row_norm.append((value / P_max) * 100)
+    matrix_norm.append(row_norm)
+plt.imshow(matrix_norm, cmap='gray')
+plt.colorbar()
+plt.show()
