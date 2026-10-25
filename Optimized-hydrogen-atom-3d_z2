@@ -1,0 +1,33 @@
+# OPTIMIZED BY AI
+import numpy as np
+import matplotlib.pyplot as plt
+N = 3000
+start = -4.503
+delta_v = 0.003003
+delta_s = delta_v * delta_v
+a0 = 0.529
+pi = np.pi
+e = np.e
+const = delta_s / (81 * 6 * pi * a0**7)   # общий множитель
+k_r   = -2.0 / (3.0 * a0)                # показатель экспоненты
+inv_a0 = 1.0 / a0
+coords = (start + np.arange(N, dtype=np.float32) * np.float32(delta_v)).astype(np.float32)
+x = coords[None, :]          # (1, N)
+z = coords[:, None]          # (N, 1)
+r = np.sqrt(x*x + z*z)
+np.maximum(r, np.float32(1e-30), out=r)
+cos_theta = z / r
+cos2 = cos_theta * cos_theta
+ang = 3.0 * cos2 - 1.0
+ang *= ang                             
+r2 = r * r
+r4 = r2 * r2
+exp_term = np.exp(k_r * r, out=r)  
+r4 *= exp_term
+P = r4
+P *= ang
+P *= np.float32(const)
+P *= np.float32(100.0 / P.max())
+plt.imshow(P, cmap='gray')
+plt.colorbar()
+plt.show()
